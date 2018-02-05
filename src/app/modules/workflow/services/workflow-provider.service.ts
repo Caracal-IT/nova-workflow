@@ -11,7 +11,7 @@ export class WorkflowProviderService {
     getWorkflow(name: string) : Observable<any> {
         return this
             .http
-            .get(WorkflowProviderService.baseUrl + name);
+            .get(WorkflowProviderService.baseUrl.replace("[name]", name));
     }
 
     static setUrl(url: string) {

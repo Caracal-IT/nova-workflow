@@ -8,9 +8,9 @@ export class ApiActivity {
     mappings: any;
 
     constructor(
-        act: any, 
-        private http: HttpClient, 
-        private model: any, 
+        act: any,
+        private http: HttpClient,
+        private model: any,
         private notificationService: NotificationsService
     ) {
         this.mapAllFields(act, this);
@@ -28,15 +28,15 @@ export class ApiActivity {
 
         let http;
 
-        if(this.method == 'get' && parameters && parameters.id) 
+        if(this.method == 'get' && parameters && parameters.id)
             http = this.http.get(this.api + '/' + parameters.id);
         else if(this.method == 'get')
             http = this.http.get(this.api + this.getQueryString(request));
         else
             http = this.http.post(this.api, request);
-        
+
         http.subscribe(
-            resp => this.success(resp), 
+            resp => this.success(resp),
             error => this.error(error),
             () => this.notificationService.clearAll()
         );
@@ -68,7 +68,7 @@ export class ApiActivity {
             if (request.hasOwnProperty(p))
                 params.push(encodeURIComponent(p) + '=' + encodeURIComponent(request[p]));
         }
-        
+
         return '?' + params.join('&');
     }
 
@@ -84,8 +84,7 @@ export class ApiActivity {
 
     mapAllFields(source: any, destination: any){
         for (let p in source) {
-          
-            if (source.hasOwnProperty(p) && source[p]) // && source[p].prototype
+            if (source.hasOwnProperty(p) && source[p])
                 destination[p] = source[p];
         }
     }

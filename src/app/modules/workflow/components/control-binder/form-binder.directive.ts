@@ -15,8 +15,8 @@ export class FormBinderDirective implements OnChanges {
     wf: any;
 
     constructor(
-                private formService: NovaFormService,
-                private container: ViewContainerRef
+      private formService: NovaFormService,
+      private container: ViewContainerRef
     ) { }
 
     ngOnChanges() {
