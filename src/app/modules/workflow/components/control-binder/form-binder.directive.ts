@@ -1,4 +1,4 @@
-import { Directive, Input, OnChanges, ViewContainerRef } from "@angular/core";
+import {Directive, Input, OnChanges, ViewContainerRef} from "@angular/core";
 import {NovaFormService} from "../../services/form.service";
 
 @Directive({

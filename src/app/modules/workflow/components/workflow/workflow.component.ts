@@ -8,7 +8,7 @@ import {Workflow} from "../../models/workflow/workflow";
        <ng-container
             *ngIf="workflow && model" 
             formBinder
-            [config]='view' 
+            [config]="view" 
             [model]="model" 
             [wf]="workflow">
         </ng-container>
@@ -38,18 +38,18 @@ export class WorkflowComponent implements OnInit {
             .subscribe(p => this.loadWorkflow(p));
     }
 
-    loadView(view: any) {
+    private loadView(view: any) {
         if (this.workflow && this.workflow.model) {
             this.view = view;
             this.model = this.workflow.model;
         }
     }
 
-    loadWorkflow(p: any){
+    private loadWorkflow(p: any){
         let workflow = this.workflowService.getWorkflow(p['wf']);
 
         if (workflow)
-            this.gotoStart(workflow)
+            this.gotoStart(workflow);
         else {
             this.workflowService
                 .load(p['wf'])
@@ -59,7 +59,6 @@ export class WorkflowComponent implements OnInit {
 
     private gotoStart(workflow: Workflow){
         this.workflow = workflow;
-        //this.route.snapshot.queryParams
         workflow.next('start');
     }
 }
