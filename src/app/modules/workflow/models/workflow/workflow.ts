@@ -1,31 +1,50 @@
-import {Activity} from "./activity";
+import {NotificationsService} from "../../services/notifications.service";
+import {HttpClient} from "@angular/common/http";
+import {ApiActivity} from "./api-activity";
+import {CodeActivity} from "./code-activity";
+import {FormActivity} from "./form-activity";
 
 export class Workflow {
-    activities : any = [];
-    model: any = {};
+  activities = [];
+  model = {};
 
-    constructor(public name: string){ }
+  constructor(public name: string) { }
 
-    next(name: string){
-        const act = this.getActivity(name);
+  next(name: string) {
+    if (this.activities && this.activities.length > 0) {
+      const filter = this.activities.filter((act: any) => act.name == name);
 
-        if (this.model && this.model.config) {
-            this.model.config = null;
-            delete this.model.config;
-        }
-
-        if (act)
-            act.execute();
+      if (filter && filter.length >= 1)
+        filter[0].execute();
     }
+  }
 
-    private getActivity(name: string): Activity|null {
-        if (this.activities && this.activities.length > 0) {
-            const filter = this.activities.filter((act: any) => act.name == name);
+  load(
+    workflowDefinition: any,
+    http: HttpClient,
+    notificationService: NotificationsService,
+    callback: any
+  ) {
+    for (let activity of workflowDefinition.activities) {
+      if (this[activity.type]) {
+        const act = this[activity.type](activity, http, callback);
+        act.workflow = this;
+        act.notificationService = notificationService;
 
-            if (filter && filter.length >= 1)
-                return filter[0];
-        }
-
-        return null;
+        this.activities.push(act);
+      }
     }
+  }
+
+  private ApiActivity(metadata: any, http: HttpClient, callback: any) {
+    return new ApiActivity(metadata, http);
+  }
+
+  private CodeActivity(metadata: any, http: HttpClient, callback: any) {
+    return new CodeActivity(metadata);
+  }
+
+  private FormActivity(metadata: any, http: HttpClient, callback: any) {
+    return new FormActivity(metadata, callback);
+  }
 }

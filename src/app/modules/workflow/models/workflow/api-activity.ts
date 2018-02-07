@@ -1,6 +1,6 @@
-import {NotificationsService} from '../../services/notifications.service';
 import {HttpClient} from "@angular/common/http";
 import {Activity} from "./activity";
+import {Workflow} from "./workflow";
 
 export class ApiActivity extends Activity {
   api: string = "";
@@ -9,13 +9,11 @@ export class ApiActivity extends Activity {
   mappings: any;
 
   constructor(
-    act: any,
-    private http: HttpClient,
-    private model: any,
-    private notificationService: NotificationsService
+    metadata: any,
+    private http: HttpClient
   ) {
     super();
-    ApiActivity.mapAllFields(act, this);
+    Activity.mapAllFields(metadata, this);
   }
 
   execute(parameters: any) {
@@ -23,10 +21,10 @@ export class ApiActivity extends Activity {
     this.notificationService.wait('Workflow', 'Loading');
 
     let request = {};
-    this.mapFields(this.model, request, 'in');
+    this.mapFields(this.workflow.model, request, 'in');
 
     if (parameters)
-      ApiActivity.mapAllFields(parameters, request);
+      Activity.mapAllFields(parameters, request);
 
     let http;
 
@@ -40,24 +38,22 @@ export class ApiActivity extends Activity {
     http.subscribe(
       resp => this.success(resp),
       error => this.error(error),
-      () => this.notificationService.clearAll()
+      () => this.notificationService.cancelWait()
     );
   }
 
   private success(response: any) {
     if (Array.isArray(response))
-      this.model["items"] = response;
+      this.workflow.model["items"] = response;
     else
-      this.mapFields(response, this.model, 'out');
+      this.mapFields(response, this.workflow.model, 'out');
 
-    this.notificationService.clearAll();
-
-    this.model.next(this.nextActivity);
+    this.workflow.next(this.nextActivity);
   }
 
   private error(error: any) {
     this.notificationService.error("Error", error.message);
-    this.model.next('error');
+    this.workflow.next('error');
   }
 
   private mapFields(source: any, destination: any, direction: any) {
@@ -67,13 +63,6 @@ export class ApiActivity extends Activity {
     for (let map of this.mappings) {
       if (map.direction === direction || map.direction === 'inout')
         destination[map.source] = source[map.destination];
-    }
-  }
-
-  private static mapAllFields(source: any, destination: any) {
-    for (let p in source) {
-      if (source.hasOwnProperty(p) && source[p])
-        destination[p] = source[p];
     }
   }
 

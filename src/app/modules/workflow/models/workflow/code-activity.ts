@@ -1,22 +1,19 @@
-import {NotificationsService} from "../../services/notifications.service";
-import {Workflow} from "./workflow";
 import {Activity} from "./activity";
 
 export class CodeActivity extends Activity {
+  code: string;
+
   constructor(
-    public name: string,
-    private code: string,
-    private model: any,
-    private workflow: Workflow,
-    private notificationsService: NotificationsService
+    metadata: any
   ) {
     super();
+    Activity.mapAllFields(metadata, this);
   }
 
   execute(parameters: any) {
     const codeActivity = Function("model", "parameters", "workflow", "notificationsService", "return { run : function(){ " + this.code + " let a = new Activity(model, parameters, workflow, notificationsService); return a.execute(); } }");
 
-    let zone = codeActivity(this.model, parameters, this.workflow, this.notificationsService);
+    let zone = codeActivity(this.workflow.model, parameters, this.workflow, this.notificationService);
     zone.run();
   }
 }

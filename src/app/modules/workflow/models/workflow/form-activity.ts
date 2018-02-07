@@ -1,21 +1,19 @@
-import { EventEmitter } from "@angular/core";
-import { Workflow } from "./workflow";
 import {Activity} from "./activity";
 
 export class FormActivity extends Activity {
-    onViewChange = new EventEmitter<any>();
     config: any|undefined;
+    form: any;
 
     constructor(
-        public name: string,
-        public form: any,
-        public model: any,
-        public wf: Workflow
+        metadata: any,
+        private callback: any
     ) {
       super();
+      Activity.mapAllFields(metadata, this);
     }
 
     execute() {
-        this.onViewChange.emit(this.form.controls);
+        if(this.callback)
+          this.callback(this, this.form.controls);
     }
 }

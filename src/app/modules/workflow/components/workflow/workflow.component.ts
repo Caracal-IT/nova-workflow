@@ -29,36 +29,24 @@ export class WorkflowComponent implements OnInit {
     ) {  }
 
     ngOnInit() {
-        this.workflowService
-            .onViewChange
-            .subscribe((view: any) => this.loadView(view));
-
         this.route
             .params
             .subscribe(p => this.loadWorkflow(p));
     }
 
-    private loadView(view: any) {
-        if (this.workflow && this.workflow.model) {
-            this.view = view;
-            this.model = this.workflow.model;
-        }
+    private loadWorkflow(p: any) {
+      this.workflowService
+        .load(p['wf'], (sender, eventArgs) => this.loadView(sender, eventArgs))
+        .subscribe(wf => {
+            this.workflow = wf;
+            this.workflow.next('start');
+        } );
     }
 
-    private loadWorkflow(p: any){
-        let workflow = this.workflowService.getWorkflow(p['wf']);
-
-        if (workflow)
-            this.gotoStart(workflow);
-        else {
-            this.workflowService
-                .load(p['wf'])
-                .subscribe(wf => this.gotoStart(wf));
-        }
+  private loadView(sender: any, eventArgs: any) {
+    if (this.workflow && this.workflow.model) {
+      this.view = eventArgs;
+      this.model = this.workflow.model;
     }
-
-    private gotoStart(workflow: Workflow){
-        this.workflow = workflow;
-        workflow.next('start');
-    }
+  }
 }
