@@ -9,9 +9,7 @@ export class Store {
 
   getMetadata(key: string){
     const metadata = sessionStorage.getItem(key);
-console.log("Store");
-console.log(metadata);
-
+    
     if(metadata)
       return Metadata.deSerialize(metadata);
 
