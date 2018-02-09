@@ -5,7 +5,8 @@ import {ApiActivity} from "./api-activity";
 import {CodeActivity} from "./code-activity";
 import {FormActivity} from "./form-activity";
 import {LocationStrategy} from "@angular/common";
-import {Metadata, Store} from "../../services/store.service";
+import {Store} from "../../services/store.service";
+import {Metadata} from "../store/metadata";
 
 export class Workflow {
   activities = [];
