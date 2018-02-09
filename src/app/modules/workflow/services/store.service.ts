@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {LocationStrategy} from "@angular/common";
+import {Metadata} from "../models/store/metadata";
 
 @Injectable()
 export class Store {
@@ -9,7 +10,7 @@ export class Store {
 
   getMetadata(key: string){
     const metadata = sessionStorage.getItem(key);
-    
+
     if(metadata)
       return Metadata.deSerialize(metadata);
 
@@ -18,21 +19,5 @@ export class Store {
 
   setMetadata(key: string, metadata: Metadata){
     sessionStorage.setItem(key, metadata.serialize());
-  }
-}
-
-export class Metadata {
-  constructor(
-    public workflow: any,
-    public activity: string,
-    public model: string
-  ) {}
-
-  serialize(): string {
-    return JSON.stringify(this);
-  }
-
-  static deSerialize(metadata: string): Metadata {
-    return JSON.parse(metadata);
   }
 }

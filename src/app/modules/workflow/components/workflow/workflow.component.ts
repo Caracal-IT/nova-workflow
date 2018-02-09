@@ -3,7 +3,7 @@ import {WorkflowService} from "../../services/workflow.service";
 import {ActivatedRoute} from "@angular/router";
 import {Workflow} from "../../models/workflow/workflow";
 import {LocationStrategy} from "@angular/common";
-import {Store} from "../../services/store.service";
+import {Store} from "../../models/store/store";
 
 @Component({
     template: `
@@ -50,7 +50,7 @@ export class WorkflowComponent implements OnInit {
             this.workflow.location = this.location;
 
             if(p['act'] && p['act'].length > 0) {
-              const metadata = this.store.getMetadata("workflowModel");
+              const metadata = Store.getMetadata("workflowModel");
               if(metadata && p['act'] === metadata.activity){
                 this.workflow.model = metadata.model;
                 activity = p['act'];

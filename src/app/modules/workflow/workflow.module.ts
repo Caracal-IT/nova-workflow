@@ -1,14 +1,14 @@
-﻿import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+﻿import {ModuleWithProviders, NgModule, Provider} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
 
-import { HttpClientModule } from "@angular/common/http";
-import { FormBinderDirective } from "./components/control-binder/form-binder.directive";
-import { NovaFormService } from "./services/form.service";
-import { FormsModule } from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
+import {FormBinderDirective} from "./components/control-binder/form-binder.directive";
+import {NovaFormService} from "./services/form.service";
+import {FormsModule} from "@angular/forms";
 
-import { WorkflowService } from './services/workflow.service';
-import { WorkflowComponent} from './components/workflow/workflow.component';
+import {WorkflowService} from './services/workflow.service';
+import {WorkflowComponent} from './components/workflow/workflow.component';
 import {WorkflowProviderService} from "./services/workflow-provider.service";
 import {NotificationsService} from "./services/notifications.service";
 import {Store} from "./services/store.service";
