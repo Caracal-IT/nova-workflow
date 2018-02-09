@@ -2,6 +2,8 @@
 import {WorkflowService} from "../../services/workflow.service";
 import {ActivatedRoute} from "@angular/router";
 import {Workflow} from "../../models/workflow/workflow";
+import {LocationStrategy} from "@angular/common";
+import {Store} from "../../services/store.service";
 
 @Component({
     template: `
@@ -25,7 +27,9 @@ export class WorkflowComponent implements OnInit {
         private resolver: ComponentFactoryResolver,
         private container: ViewContainerRef,
         private workflowService: WorkflowService,
-        private route: ActivatedRoute
+        private location: LocationStrategy,
+        private route: ActivatedRoute,
+        private store: Store
     ) {  }
 
     ngOnInit() {
@@ -35,12 +39,26 @@ export class WorkflowComponent implements OnInit {
     }
 
     private loadWorkflow(p: any) {
+      let activity = "start";
+
       this.workflowService
         .load(p['wf'], (sender, eventArgs) => this.loadView(sender, eventArgs))
         .subscribe(wf => {
             this.workflow = wf;
-            this.workflow.next('start');
-        } );
+            this.workflow.store = this.store;
+
+            this.workflow.location = this.location;
+
+            if(p['act'] && p['act'].length > 0) {
+              const metadata = this.store.getMetadata("workflowModel");
+              if(metadata && p['act'] === metadata.activity){
+                this.workflow.model = metadata.model;
+                activity = p['act'];
+              }
+            }
+
+            this.workflow.next(activity);
+        });
     }
 
   private loadView(sender: any, eventArgs: any) {

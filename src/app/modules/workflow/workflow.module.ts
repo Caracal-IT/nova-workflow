@@ -11,6 +11,7 @@ import { WorkflowService } from './services/workflow.service';
 import { WorkflowComponent} from './components/workflow/workflow.component';
 import {WorkflowProviderService} from "./services/workflow-provider.service";
 import {NotificationsService} from "./services/notifications.service";
+import {Store} from "./services/store.service";
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import {NotificationsService} from "./services/notifications.service";
         WorkflowComponent
     ],
     providers: [
+      Store,
       NovaFormService
     ],
     exports: [

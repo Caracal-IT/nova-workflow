@@ -1,21 +1,40 @@
+
 import {NotificationsService} from "../../services/notifications.service";
 import {HttpClient} from "@angular/common/http";
 import {ApiActivity} from "./api-activity";
 import {CodeActivity} from "./code-activity";
 import {FormActivity} from "./form-activity";
+import {LocationStrategy} from "@angular/common";
+import {Metadata, Store} from "../../services/store.service";
 
 export class Workflow {
   activities = [];
-  model = {};
+  model: any = {};
+  metadata: Metadata;
+  store: Store;
+  location: LocationStrategy
 
-  constructor(public name: string) { }
+  constructor(public name: string) {
+    this.metadata = new Metadata(name, "start", this.model);
+  }
 
   next(name: string) {
     if (this.activities && this.activities.length > 0) {
       const filter = this.activities.filter((act: any) => act.name == name);
 
-      if (filter && filter.length >= 1)
+      if (filter && filter.length >= 1) {
+        if(filter[0] instanceof FormActivity) {
+          this.metadata.activity = filter[0].name;
+
+          const url = `/${this.name}/${name}`;
+          this.location.pushState({}, name, url, "");
+        }
+
+        this.metadata.model = this.model;
+        this.store.setMetadata("workflowModel", this.metadata);
+
         filter[0].execute();
+      }
     }
   }
 
