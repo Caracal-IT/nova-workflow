@@ -7,8 +7,11 @@ import {FormActivity} from "./form-activity";
 import {LocationStrategy} from "@angular/common";
 import {Store} from "../../services/store.service";
 import {Metadata} from "../store/metadata";
+import {WorkflowEvents} from "./workflow-events";
+import {WorkflowProviderService} from "../../services/workflow-provider.service";
 
 export class Workflow {
+  workflowId: string;
   activities = [];
   model: any = {};
   metadata: Metadata;
@@ -16,7 +19,10 @@ export class Workflow {
   location: LocationStrategy
 
   constructor(public name: string) {
+    this.workflowId = Guid.newGuid();
     this.metadata = new Metadata(name, "start", this.model);
+
+    WorkflowEvents.created(this.workflowId, this.name);
   }
 
   next(name: string) {
@@ -34,9 +40,16 @@ export class Workflow {
         this.metadata.model = this.model;
         this.store.setMetadata("workflowModel", this.metadata);
 
+        WorkflowEvents.changingState(this.workflowId, this.name, name, filter[0].constructor.name);
         filter[0].execute();
+        WorkflowEvents.changedState(this.workflowId, this.name, name, filter[0].constructor.name);
+
+        return;
       }
     }
+
+    WorkflowEvents.activityNotFound(this.workflowId, this.name, name);
+    throw new Error("Activity not found");
   }
 
   load(
@@ -45,6 +58,8 @@ export class Workflow {
     notificationService: NotificationsService,
     callback: any
   ) {
+    WorkflowEvents.loading(this.workflowId, this.name);
+
     for (let activity of workflowDefinition.activities) {
       if (this[activity.type]) {
         const act = this[activity.type](activity, http, callback);
@@ -54,7 +69,11 @@ export class Workflow {
         this.activities.push(act);
       }
     }
+
+    WorkflowEvents.loaded(this.workflowId, this.name);
   }
+
+
 
   private ApiActivity(metadata: any, http: HttpClient, callback: any) {
     return new ApiActivity(metadata, http);
@@ -66,5 +85,14 @@ export class Workflow {
 
   private FormActivity(metadata: any, http: HttpClient, callback: any) {
     return new FormActivity(metadata, callback);
+  }
+}
+
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
   }
 }

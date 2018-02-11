@@ -1,13 +1,8 @@
 import {Injectable} from "@angular/core";
-import {LocationStrategy} from "@angular/common";
 import {Metadata} from "../models/store/metadata";
 
 @Injectable()
 export class Store {
-  constructor(
-    private location: LocationStrategy
-  ){ }
-
   getMetadata(key: string){
     const metadata = sessionStorage.getItem(key);
 
