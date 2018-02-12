@@ -46,12 +46,6 @@ export class WorkflowEvents {
     });
   }
 
-/*
-
-
-
-    */
-
   private static dispatchEvent(eventType: string, detail: any){
     window.dispatchEvent(
       new CustomEvent(eventType, {detail: detail})
