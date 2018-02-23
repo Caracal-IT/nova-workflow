@@ -62,7 +62,7 @@ export class ApiActivity extends Activity {
 
     for (let map of this.mappings) {
       if (map.direction === direction || map.direction === 'inout')
-        destination[map.source] = source[map.destination];
+        destination[map.source] = source[map.destination]||null;
     }
   }
 
