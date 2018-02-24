@@ -11,9 +11,12 @@ export class CodeActivity extends Activity {
   }
 
   execute(parameters: any) {
-    const codeActivity = Function("model", "parameters", "workflow", "notificationsService", "return { run : function(){ " + this.code + " let a = new Activity(model, parameters, workflow, notificationsService); return a.execute(); } }");
+    const codeActivity = Function(
+      "params", "wf", "notify",
+      `return { run : function() { ${this.code} return execute(params, wf, notify); } }`
+    );
 
-    let zone = codeActivity(this.workflow.model, parameters, this.workflow, this.notificationService);
+    let zone = codeActivity(parameters, this.workflow, this.notificationService);
     zone.run();
   }
 }
