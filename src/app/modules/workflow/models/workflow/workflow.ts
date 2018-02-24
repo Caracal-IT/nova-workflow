@@ -1,14 +1,9 @@
-
-import {NotificationsService} from "../../services/notifications.service";
-import {HttpClient} from "@angular/common/http";
-import {ApiActivity} from "./api-activity";
-import {CodeActivity} from "./code-activity";
 import {FormActivity} from "./form-activity";
 import {LocationStrategy} from "@angular/common";
 import {Store} from "../../services/store.service";
 import {Metadata} from "../store/metadata";
 import {WorkflowEvents} from "./workflow-events";
-import {WorkflowProviderService} from "../../services/workflow-provider.service";
+import {ActivityFactoryService} from "../../services/activity-factory.service";
 
 export class Workflow {
   workflowId: string;
@@ -16,7 +11,7 @@ export class Workflow {
   model: any = {};
   metadata: Metadata;
   store: Store;
-  location: LocationStrategy
+  location: LocationStrategy;
 
   constructor(public name: string) {
     this.workflowId = Guid.newGuid();
@@ -54,44 +49,28 @@ export class Workflow {
 
   load(
     workflowDefinition: any,
-    http: HttpClient,
-    notificationService: NotificationsService,
+    activityFactory: ActivityFactoryService,
     callback: any
   ) {
     WorkflowEvents.loading(this.workflowId, this.name);
 
-    for (let activity of workflowDefinition.activities) {
-      if (this[activity.type]) {
-        const act = this[activity.type](activity, http, callback);
-        act.workflow = this;
-        act.notificationService = notificationService;
+    activityFactory.initialize(this, callback);
 
+    for (let activity of workflowDefinition.activities) {
+      const act = activityFactory.create(activity);
+
+      if(act)
         this.activities.push(act);
-      }
     }
 
     WorkflowEvents.loaded(this.workflowId, this.name);
-  }
-
-
-
-  private ApiActivity(metadata: any, http: HttpClient, callback: any) {
-    return new ApiActivity(metadata, http);
-  }
-
-  private CodeActivity(metadata: any, http: HttpClient, callback: any) {
-    return new CodeActivity(metadata);
-  }
-
-  private FormActivity(metadata: any, http: HttpClient, callback: any) {
-    return new FormActivity(metadata, callback);
   }
 }
 
 class Guid {
   static newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      const r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
       return v.toString(16);
     });
   }
