@@ -1,6 +1,6 @@
 {
   "name": "nova-workflow",
-  "version": "2.0.1",
+  "version": "2.0.8",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

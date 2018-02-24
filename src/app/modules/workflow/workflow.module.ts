@@ -19,10 +19,6 @@ import {ActivityFactoryService} from "./services/activity-factory.service";
         FormBinderDirective,
         WorkflowComponent
     ],
-    providers: [
-      Store,
-      NovaFormService
-    ],
     exports: [
         WorkflowComponent
     ],
@@ -63,7 +59,8 @@ export class WorkflowModule {
                 providedFormService,
                 activityFactoryService,
                 workflowProviderService,
-                WorkflowService
+                WorkflowService,
+                Store
             ]
         };
     }

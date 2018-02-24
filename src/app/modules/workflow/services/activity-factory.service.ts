@@ -23,11 +23,14 @@ export class ActivityFactoryService {
   ) {
     this.workflow = workflow;
     this.callback = callback;
+    this.notificationService.parameters = this.workflow.model;
   }
 
   create(activity: any): Activity {
-    if (this[activity.type]) {
-      const act = this[activity.type](activity, this.http, this.callback);
+    const actMethod = this.GetActivityMethod(activity.type);
+
+    if (actMethod) {
+      const act = actMethod(activity, this.http, this.callback);
       act.workflow = this.workflow;
       act.notificationService = this.notificationService;
 
@@ -35,15 +38,19 @@ export class ActivityFactoryService {
     }
   }
 
-  private ApiActivity(metadata: any, http: HttpClient, callback: any) {
+  GetActivityMethod(activity: string) {
+    return this[activity];
+  }
+
+  protected ApiActivity(metadata: any, http: HttpClient, callback: any) {
     return new ApiActivity(metadata, http);
   }
 
-  private CodeActivity(metadata: any, http: HttpClient, callback: any) {
+  protected CodeActivity(metadata: any, http: HttpClient, callback: any) {
     return new CodeActivity(metadata);
   }
 
-  private FormActivity(metadata: any, http: HttpClient, callback: any) {
+  protected FormActivity(metadata: any, http: HttpClient, callback: any) {
     return new FormActivity(metadata, callback);
   }
 }
