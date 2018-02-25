@@ -1,7 +1,5 @@
 import {FormActivity} from "./form-activity";
 import {LocationStrategy} from "@angular/common";
-import {Store} from "../../services/store.service";
-import {Metadata} from "../store/metadata";
 import {WorkflowEvents} from "./workflow-events";
 import {ActivityFactoryService} from "../../services/activity-factory.service";
 
@@ -9,13 +7,10 @@ export class Workflow {
   workflowId: string;
   activities = [];
   model: any = {};
-  metadata: Metadata;
-  store: Store;
   location: LocationStrategy;
 
   constructor(public name: string) {
     this.workflowId = Guid.newGuid();
-    this.metadata = new Metadata(name, "start", this.model);
 
     WorkflowEvents.created(this.workflowId, this.name);
   }
@@ -26,14 +21,9 @@ export class Workflow {
 
       if (filter && filter.length >= 1) {
         if(filter[0] instanceof FormActivity) {
-          this.metadata.activity = filter[0].name;
-
           const url = `/${this.name}/${name}`;
           this.location.pushState({}, name, url, "");
         }
-
-        this.metadata.model = this.model;
-        this.store.setMetadata("workflowModel", this.metadata);
 
         WorkflowEvents.changingState(this.workflowId, this.name, name, filter[0].constructor.name);
         filter[0].execute();

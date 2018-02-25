@@ -3,7 +3,6 @@ import {WorkflowService} from "../../services/workflow.service";
 import {ActivatedRoute} from "@angular/router";
 import {Workflow} from "../../models/workflow/workflow";
 import {LocationStrategy} from "@angular/common";
-import {Store} from "../../services/store.service";
 
 @Component({
     template: `
@@ -28,8 +27,7 @@ export class WorkflowComponent implements OnInit {
         private container: ViewContainerRef,
         private workflowService: WorkflowService,
         private location: LocationStrategy,
-        private route: ActivatedRoute,
-        private store: Store
+        private route: ActivatedRoute
     ) {  }
 
     ngOnInit() {
@@ -45,17 +43,7 @@ export class WorkflowComponent implements OnInit {
         .load(p['wf'], (sender, eventArgs) => this.loadView(sender, eventArgs))
         .subscribe(wf => {
             this.workflow = wf;
-            this.workflow.store = this.store;
-
             this.workflow.location = this.location;
-
-            if(p['act'] && p['act'].length > 0) {
-              const metadata = this.store.getMetadata("workflowModel");
-              if(metadata && p['act'] === metadata.activity){
-                this.workflow.model = metadata.model;
-                activity = p['act'];
-              }
-            }
 
             this.workflow.next(activity);
         });

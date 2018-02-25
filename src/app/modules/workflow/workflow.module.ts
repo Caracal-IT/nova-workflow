@@ -11,7 +11,6 @@ import {WorkflowService} from './services/workflow.service';
 import {WorkflowComponent} from './components/workflow/workflow.component';
 import {WorkflowProviderService} from "./services/workflow-provider.service";
 import {NotificationsService} from "./services/notifications.service";
-import {Store} from "./services/store.service";
 import {ActivityFactoryService} from "./services/activity-factory.service";
 
 @NgModule({
@@ -59,8 +58,7 @@ export class WorkflowModule {
                 providedFormService,
                 activityFactoryService,
                 workflowProviderService,
-                WorkflowService,
-                Store
+                WorkflowService
             ]
         };
     }
