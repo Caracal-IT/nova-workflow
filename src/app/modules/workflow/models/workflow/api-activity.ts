@@ -57,12 +57,16 @@ export class ApiActivity extends Activity {
   }
 
   private mapFields(source: any, destination: any, direction: any) {
-    if (!this.mappings || this.mappings.length == 0)
+    if (!this.mappings || this.mappings.length === 0)
       ApiActivity.mapAllFields(source, destination);
 
     for (let map of this.mappings) {
-      if (map.direction === direction || map.direction === 'inout')
-        destination[map.source] = source[map.destination]||null;
+      if (map.direction === direction || map.direction === 'inout') {
+        if(source && source.hasOwnProperty(map.destination) && source[map.destination] != undefined)
+          destination[map.source] = source[map.destination];
+        else
+          destination[map.source] = null;
+      }
     }
   }
 

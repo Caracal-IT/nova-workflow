@@ -10,7 +10,7 @@ export abstract class Activity {
 
   protected static mapAllFields(source: any, destination: any) {
     for (let p in source) {
-      if (source.hasOwnProperty(p) && source[p])
+      if (source && source.hasOwnProperty(p) && source[p])
         destination[p] = source[p];
     }
   }
