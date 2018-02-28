@@ -18,6 +18,7 @@ import {ActivityFactoryService} from "./services/activity-factory.service";
         FormBinderDirective,
         WorkflowComponent
     ],
+
     exports: [
         WorkflowComponent
     ],
