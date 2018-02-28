@@ -38,7 +38,6 @@ export class WorkflowComponent implements OnInit {
 
     private loadWorkflow(p: any) {
       let activity = "start";
-      delete this.workflow;
 
       this.workflowService
         .load(p['wf'], (sender, eventArgs) => this.loadView(sender, eventArgs))
