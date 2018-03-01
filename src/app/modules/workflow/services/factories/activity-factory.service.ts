@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {FormActivity} from "../models/workflow/form-activity";
-import {ApiActivity} from "../models/workflow/api-activity";
-import {CodeActivity} from "../models/workflow/code-activity";
-import {Activity} from "../models/workflow/activity";
-import {NotificationsService} from "./notifications.service";
-import {Workflow} from "../models/workflow/workflow";
+import {FormActivity} from "../../models/workflow/form-activity";
+import {ApiActivity} from "../../models/workflow/api-activity";
+import {CodeActivity} from "../../models/workflow/code-activity";
+import {Activity} from "../../models/workflow/activity";
+import {NotificationsService} from "../notifications.service";
+import {Workflow} from "../../models/workflow/workflow";
 
 @Injectable()
 export class ActivityFactoryService {
