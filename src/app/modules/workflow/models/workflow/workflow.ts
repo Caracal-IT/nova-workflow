@@ -1,4 +1,4 @@
-import {FormActivity} from "./form-activity";
+import  {FormActivity} from "./form-activity";
 import {LocationStrategy} from "@angular/common";
 import {WorkflowEvents} from "./workflow-events";
 import {ActivityFactoryService} from "../../services/activity-factory.service";
