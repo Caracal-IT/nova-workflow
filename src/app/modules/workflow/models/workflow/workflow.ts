@@ -12,7 +12,7 @@ export class Workflow {
       const activity = filter.length > 0 ? filter[0] : new NullActivity(this, name);
 
       WorkflowEvents.changingState(this.workflowId, this.name, name, activity.constructor.name);
-      filter[0].execute();
+      activity.execute();
       WorkflowEvents.changedState(this.workflowId, this.name, name, activity.constructor.name);
   }
 }
