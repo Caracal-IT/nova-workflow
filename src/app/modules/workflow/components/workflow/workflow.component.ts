@@ -2,7 +2,6 @@
 import {WorkflowService} from "../../services/workflow.service";
 import {ActivatedRoute} from "@angular/router";
 import {Workflow} from "../../models/workflow/workflow";
-import {LocationStrategy} from "@angular/common";
 
 @Component({
     template: `
@@ -26,7 +25,6 @@ export class WorkflowComponent implements OnInit {
         private resolver: ComponentFactoryResolver,
         private container: ViewContainerRef,
         private workflowService: WorkflowService,
-        private location: LocationStrategy,
         private route: ActivatedRoute
     ) {  }
 
@@ -43,8 +41,6 @@ export class WorkflowComponent implements OnInit {
         .load(p['wf'], (sender, eventArgs) => this.loadView(sender, eventArgs))
         .subscribe(wf => {
             this.workflow = wf;
-            this.workflow.location = this.location;
-
             this.workflow.next(activity);
         });
     }
