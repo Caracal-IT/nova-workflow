@@ -1,4 +1,5 @@
 import {WorkflowEvents} from "./workflow-events";
+import {EmptyActivity} from "./empty-activity";
 
 export class Workflow {
   activities = [];
@@ -7,19 +8,11 @@ export class Workflow {
   constructor(public workflowId: string, public name: string) { }
 
   next(name: string) {
-    if (this.activities && this.activities.length > 0) {
       const filter = this.activities.filter((act: any) => act.name == name);
+      const activity = filter.length > 0 ? filter[0] : new EmptyActivity(this);
 
-      if (filter && filter.length >= 1) {
-        WorkflowEvents.changingState(this.workflowId, this.name, name, filter[0].constructor.name);
-        filter[0].execute();
-        WorkflowEvents.changedState(this.workflowId, this.name, name, filter[0].constructor.name);
-
-        return;
-      }
-    }
-
-    WorkflowEvents.activityNotFound(this.workflowId, this.name, name);
-    throw new Error("Activity not found");
+      WorkflowEvents.changingState(this.workflowId, this.name, name, activity.constructor.name);
+      filter[0].execute();
+      WorkflowEvents.changedState(this.workflowId, this.name, name, activity.constructor.name);
   }
 }
