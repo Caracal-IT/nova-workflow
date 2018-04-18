@@ -9,9 +9,6 @@ export abstract class Activity {
   abstract execute(parameters?: any|null);
 
   protected static mapAllFields(source: any, destination: any) {
-    for (let p in source) {
-      if (source && source.hasOwnProperty(p) && source[p])
-        destination[p] = source[p];
-    }
+    Object.assign(destination, source);
   }
 }
